@@ -17,9 +17,7 @@ static CGFloat const BeveliPhoneXPortraitBottomSafeAreaHeight = 34.0f;
 
 static CGFloat const BevelPortraitTopSafeAreaHeightForNormalRectScreen = 22.0f;
 
-@implementation ABKInAppMessageSlideupViewController {
-    BOOL isPortrait;
-}
+@implementation ABKInAppMessageSlideupViewController
 
 - (void)viewWillAppear:(BOOL)animated {
   [super viewWillAppear:animated];
@@ -33,18 +31,6 @@ static CGFloat const BevelPortraitTopSafeAreaHeightForNormalRectScreen = 22.0f;
     self.view.layer.cornerRadius = BeveledViewRadius;
     self.view.layer.masksToBounds = NO;
   }
-}
-
-- (void)viewDidLayoutSubviews {
-    [super viewDidLayoutSubviews];
-    if([UIScreen mainScreen].bounds.size.width < [UIScreen mainScreen].bounds.size.height){
-        //Keyboard is in Portrait
-        isPortrait = YES;
-    }
-    else{
-        //Keyboard is in Landscape
-        isPortrait = NO;
-    }
 }
 
 - (void)setupChevron {
@@ -149,26 +135,27 @@ static CGFloat const BevelPortraitTopSafeAreaHeightForNormalRectScreen = 22.0f;
 }
 
 - (void)beforeMoveInAppMessageViewOnScreen {
-    self.slideConstraint.constant = 0;
-    if (((ABKInAppMessageSlideup *)self.inAppMessage).inAppMessageSlideupAnchor == ABKInAppMessageSlideupFromTop) {
-        if ([ABKUIUtils isiPhoneX]) {
-            self.slideConstraint.constant = isPortrait ?
-            BeveliPhoneXPortraitTopSafeAreaHeight : BevelLandscapeTopSafeAreaHeight;
-        } else if ([(ABKInAppMessageSlideup *)self.inAppMessage isBeveled]) {
-            self.slideConstraint.constant = isPortrait ?
-            BevelPortraitTopSafeAreaHeightForNormalRectScreen : BevelLandscapeTopSafeAreaHeight;
-        }
-    } else {
-        if ([ABKUIUtils isiPhoneX]) {
-            if (isPortrait) {
-                self.slideConstraint.constant = BeveliPhoneXPortraitBottomSafeAreaHeight;
-            } else {
-                self.slideConstraint.constant = BevelLandscapeBottomSafeAreaHeight;
-            }
-        } else if ([(ABKInAppMessageSlideup *)self.inAppMessage isBeveled]) {
-            self.slideConstraint.constant = BevelLandscapeBottomSafeAreaHeight;
-        }
+  self.slideConstraint.constant = 0;
+  UIInterfaceOrientation statusBarOrientation = [UIApplication sharedApplication].statusBarOrientation;
+  if (((ABKInAppMessageSlideup *)self.inAppMessage).inAppMessageSlideupAnchor == ABKInAppMessageSlideupFromTop) {
+    if ([ABKUIUtils isiPhoneX]) {
+      self.slideConstraint.constant = statusBarOrientation == UIInterfaceOrientationPortrait ?
+                                      BeveliPhoneXPortraitTopSafeAreaHeight : BevelLandscapeTopSafeAreaHeight;
+    } else if ([(ABKInAppMessageSlideup *)self.inAppMessage isBeveled]) {
+      self.slideConstraint.constant = statusBarOrientation == UIInterfaceOrientationPortrait ?
+                                      BevelPortraitTopSafeAreaHeightForNormalRectScreen : BevelLandscapeTopSafeAreaHeight;
     }
+  } else {
+    if ([ABKUIUtils isiPhoneX]) {
+      if (UIInterfaceOrientationIsPortrait(statusBarOrientation)) {
+        self.slideConstraint.constant = BeveliPhoneXPortraitBottomSafeAreaHeight;
+      } else {
+        self.slideConstraint.constant = BevelLandscapeBottomSafeAreaHeight;
+      }
+    } else if ([(ABKInAppMessageSlideup *)self.inAppMessage isBeveled]) {
+      self.slideConstraint.constant = BevelLandscapeBottomSafeAreaHeight;
+    }
+  }
 }
 
 - (void)moveInAppMessageViewOnScreen {

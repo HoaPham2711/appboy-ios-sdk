@@ -97,18 +97,8 @@ static const CGFloat TextPaddingForLandscapeiPhoneX = 45.0f;
 - (void)viewDidLayoutSubviews {
   [super viewDidLayoutSubviews];
   if ([ABKUIUtils isiPhoneX] && self.textsView != nil) {
-
-    BOOL isPortrait = YES;
-    if([UIScreen mainScreen].bounds.size.width < [UIScreen mainScreen].bounds.size.height){
-        //Keyboard is in Portrait
-        isPortrait = YES;
-    }
-    else{
-        //Keyboard is in Landscape
-        isPortrait = NO;
-    }
-      
-    CGFloat textPadding = isPortrait ?
+    UIInterfaceOrientation statusBarOrientation = [UIApplication sharedApplication].statusBarOrientation;
+    CGFloat textPadding = UIInterfaceOrientationIsPortrait(statusBarOrientation) ?
                           TextPaddingForNormalRectScreen : TextPaddingForLandscapeiPhoneX;
     self.textsViewLeadingConstraint.constant = textPadding;
     self.textsViewTrailingConstraint.constant = textPadding;
