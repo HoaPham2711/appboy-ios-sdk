@@ -7,7 +7,9 @@
 #import "ABKInAppMessageHTMLFullViewController.h"
 #import "ABKInAppMessageFullViewController.h"
 
-@implementation ABKInAppMessageUIController
+@implementation ABKInAppMessageUIController {
+    BOOL isPortrait;
+}
 
 - (instancetype)init {
   if (self = [super init]) {
@@ -31,20 +33,31 @@
   return self;
 }
 
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    if([UIScreen mainScreen].bounds.size.width < [UIScreen mainScreen].bounds.size.height){
+        //Keyboard is in Portrait
+        isPortrait = YES;
+    }
+    else{
+        //Keyboard is in Landscape
+        isPortrait = NO;
+    }
+}
+    
 #pragma mark - Show and Hide In-app Message
 
 - (void)showInAppMessage:(ABKInAppMessage *)inAppMessage {
   if ([UIDevice currentDevice].userInterfaceIdiom != UIUserInterfaceIdiomPad) {
     // Check the device orientation before displaying the in-app message
-    UIInterfaceOrientation statusBarOrientation = [UIApplication sharedApplication].statusBarOrientation;
     NSString *errorMessage = @"The in-app message %@ with %@ orientation shouldn't be displayed in %@, disregarding this in-app message.";
     if (inAppMessage.orientation == ABKInAppMessageOrientationPortrait &&
-        !UIInterfaceOrientationIsPortrait(statusBarOrientation)) {
+        !isPortrait) {
       NSLog(errorMessage, inAppMessage, @"portrait", @"landscape");
       return;
     }
     if (inAppMessage.orientation == ABKInAppMessageOrientationLandscape &&
-        !UIInterfaceOrientationIsLandscape(statusBarOrientation)) {
+        isPortrait) {
       NSLog(errorMessage, inAppMessage, @"landscape", @"portrait");
       return;
     }
