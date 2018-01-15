@@ -1,0 +1,28 @@
+source 'https://github.com/CocoaPods/Specs.git'
+
+
+
+target :Stopwatch do
+  platform :ios, '8.0'
+  pod 'Appboy-iOS-SDK'
+  pod 'NUI',:git => 'https://github.com/tombenner/nui.git'
+  pod 'KKColorListPicker', :git => 'https://github.com/leoru/KKColorListPicker.git'
+  pod 'Firebase/DynamicLinks'
+  pod 'Branch'
+  pod 'BuddyBuildSDK'
+end
+
+target :tvOS_Stopwatch do
+  platform :tvos, '9.0'
+  pod 'Appboy-tvOS-SDK'
+end
+
+target :tvOS_TVML_Stopwatch do
+  platform :tvos, '9.0'
+  pod 'Appboy-tvOS-SDK'
+end
+
+target :StopwatchNotificationContentExtension do
+  platform :ios, '10.0'
+  pod 'Appboy-Push-Story'
+end
