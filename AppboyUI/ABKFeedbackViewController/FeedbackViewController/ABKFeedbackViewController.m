@@ -162,13 +162,25 @@ static NSString *const FeedbackBottomConstraintID = @"FeedbackBottomConstraint";
 }
 
 - (void)displayAlertViewWithTitle:(NSString *)title message:(NSString *)message {
-  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
-                                                  message:message
-                                                 delegate:nil
-                                        cancelButtonTitle:[self localizedAppboyFeedbackString:@"Appboy.alert.ok-button.title"]
-                                        otherButtonTitles:nil, nil];
-  [alert show];
-  alert = nil;
+    UIAlertController * alert = [UIAlertController
+                                 alertControllerWithTitle:title
+                                 message:message
+                                 preferredStyle:UIAlertControllerStyleAlert];
+    
+    //Add Buttons
+    
+    UIAlertAction* okButton = [UIAlertAction
+                                actionWithTitle:[self localizedAppboyFeedbackString:@"Appboy.alert.ok-button.title"]
+                                style:UIAlertActionStyleDefault
+                                handler:^(UIAlertAction * action) {
+                                    //Handle your yes please button action here
+                                    
+                                }];
+    
+    //Add your buttons to alert controller
+    
+    [alert addAction:okButton];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 #pragma mark - UITextFieldDelegate
